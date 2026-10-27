@@ -55,5 +55,13 @@ services:
     # All runtime config is in .env. env_file passes every variable
     # straight into the container, so adding a new appliance is a
     # .env edit only — no compose change.
+    #
+    # SMARTTHINGS_LOCAL_ENV_FILE moves that file out of the checkout.
+    # `--env-file` alone does not: it feeds the ${...} interpolation
+    # above but never reaches the container. Set this key inside the
+    # file you pass, and one flag drives both:
+    #   docker compose --env-file /opt/smartthings-local/bridge.env up -d
+    # Prefixed for the same reason as SMARTTHINGS_LOCAL_APPDATA_DIR: a
+    # shell-exported value wins over the file.
     env_file:
-      - .env
+      - ${SMARTTHINGS_LOCAL_ENV_FILE:-.env}
